@@ -18,20 +18,6 @@ class Statistician:
         return sum(x) / len(x)
 
     @staticmethod
-    def median(x) -> Union[float, None]:
-        return Statistician.percentile(x, 50)
-
-    @staticmethod
-    def quartile(x) -> Union[float, None]:
-        if len(x) == 0:
-            return None
-
-        return [
-            Statistician.percentile(x, 25),
-            Statistician.percentile(x, 75)
-        ]
-
-    @staticmethod
     def percentile(x, p) -> Union[float, None]:
         if not x:
             return None

@@ -1,4 +1,14 @@
+import numpy as np
+from typing import Union
+
 class Statistician:
+
+    @staticmethod
+    def count(x) -> Union[float, None]:
+        if len(x) == 0:
+            return None
+
+        return sum(1 for value in x if not np.isnan(float(value)))
 
     @staticmethod
     def mean(x) -> Union[float, None]:
@@ -9,7 +19,7 @@ class Statistician:
 
     @staticmethod
     def median(x) -> Union[float, None]:
-        return TinyStatistician.percentile(x, 50)
+        return Statistician.percentile(x, 50)
 
     @staticmethod
     def quartile(x) -> Union[float, None]:
@@ -17,8 +27,8 @@ class Statistician:
             return None
 
         return [
-            TinyStatistician.percentile(x, 25),
-            TinyStatistician.percentile(x, 75)
+            Statistician.percentile(x, 25),
+            Statistician.percentile(x, 75)
         ]
 
     @staticmethod
@@ -43,12 +53,12 @@ class Statistician:
         if len(x) == 0:
             return None
 
-        mean = TinyStatistician.mean(x)
+        mean = Statistician.mean(x)
         return sum([(i - mean) ** 2 for i in x]) / (len(x) - 1)
 
     @staticmethod
     def std(x) -> Union[float, None]:
-        variance = TinyStatistician.var(x)
+        variance = Statistician.var(x)
 
         if variance is None:
             return None

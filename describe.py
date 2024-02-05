@@ -12,7 +12,7 @@ def main():
 
         dataframe = pd.DataFrame(
             columns=columns,
-            index=['Count', 'Mean', 'Std', 'Min', '25%', '50%','75%','Max']
+            index=['Count', 'Mean', 'Std', 'Min', '25%', '50%', '75%', 'Max']
         )
 
         for column in columns:

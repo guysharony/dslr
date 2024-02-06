@@ -17,14 +17,14 @@ def main():
 
         for column in columns:
             values = dataset[column].tolist()
-            dataframe[column]['Count'] = Compute.count(values)
-            dataframe[column]['Mean'] = Compute.mean(values)
-            dataframe[column]['Std'] = Compute.std(values)
-            dataframe[column]['Min'] = Compute.min(values)
-            dataframe[column]['25%'] = Compute.percentile(values, 25)
-            dataframe[column]['50%'] = Compute.percentile(values, 50)
-            dataframe[column]['75%'] = Compute.percentile(values, 75)
-            dataframe[column]['Max'] = Compute.max(values)
+            dataframe[column]['Count'] = '{:9f}'.format(Compute.count(values))
+            dataframe[column]['Mean'] = '{:9f}'.format(Compute.mean(values))
+            dataframe[column]['Std'] = '{:9f}'.format(Compute.std(values))
+            dataframe[column]['Min'] = '{:9f}'.format(Compute.min(values))
+            dataframe[column]['25%'] = '{:9f}'.format(Compute.percentile(values, 25))
+            dataframe[column]['50%'] = '{:9f}'.format(Compute.percentile(values, 50))
+            dataframe[column]['75%'] = '{:9f}'.format(Compute.percentile(values, 75))
+            dataframe[column]['Max'] = '{:9f}'.format(Compute.max(values))
 
         print(dataframe)
 

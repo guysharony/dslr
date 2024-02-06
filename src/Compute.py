@@ -36,7 +36,7 @@ class Compute:
 
     @staticmethod
     def percentile(values, p) -> Union[float, None]:
-        if not values:
+        if len(values) == 0:
             return None
 
         if not 0 <= p <= 100:
@@ -45,7 +45,6 @@ class Compute:
         numeric_values = Compute.numeric(values)
 
         data_sorted = sorted(numeric_values)
-
         index = (p / 100) * (len(data_sorted) - 1)
         lower_index = int(index // 1)
         upper_index = lower_index + 1

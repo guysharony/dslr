@@ -8,7 +8,7 @@ def main():
         filename = sys.argv[1]
         dataset = pd.read_csv(filename, index_col=0)
 
-        columns = dataset.select_dtypes(include="number").columns.tolist()
+        columns = dataset.dropna(axis=1, how='all').select_dtypes(include="number").columns.tolist()
 
         dataframe = pd.DataFrame(
             columns=columns,

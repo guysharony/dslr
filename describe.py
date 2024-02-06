@@ -1,7 +1,7 @@
 import sys
 import pandas as pd
 
-from src.Statistician import Statistician
+from src.Compute import Compute
 
 def main():
     try:
@@ -17,14 +17,14 @@ def main():
 
         for column in columns:
             values = dataset[column].tolist()
-            dataframe[column]['Count'] = Statistician.count(values)
-            dataframe[column]['Mean'] = Statistician.mean(values)
-            dataframe[column]['Std'] = Statistician.std(values)
-            dataframe[column]['Min'] = min(values)
-            dataframe[column]['25%'] = Statistician.percentile(values, 25)
-            dataframe[column]['50%'] = Statistician.percentile(values, 50)
-            dataframe[column]['75%'] = Statistician.percentile(values, 75)
-            dataframe[column]['Max'] = max(values)
+            dataframe[column]['Count'] = Compute.count(values)
+            dataframe[column]['Mean'] = Compute.mean(values)
+            dataframe[column]['Std'] = Compute.std(values)
+            dataframe[column]['Min'] = Compute.min(values)
+            dataframe[column]['25%'] = Compute.percentile(values, 25)
+            dataframe[column]['50%'] = Compute.percentile(values, 50)
+            dataframe[column]['75%'] = Compute.percentile(values, 75)
+            dataframe[column]['Max'] = Compute.max(values)
 
         print(dataframe)
 

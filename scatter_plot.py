@@ -3,16 +3,20 @@ import matplotlib.pyplot as plt
 from src.MinMaxScaler import MinMaxScaler
 from src.Compute import Compute
 import sys as sys
+import numpy as np
 
 if __name__ == "__main__":
     try:
         assert len(sys.argv) == 3, "2 arguments required"
         first_course = sys.argv[1]
         second_course = sys.argv[2]
+        if first_course == second_course:
+            raise ValueError("Cannot plot self-comparison for one course, choose two different courses")
+
         df = pd.read_csv('./datasets/dataset_train.csv')
         for course in [first_course, second_course]:
             if course not in df.columns:
-                raise ValueError(f"'{course}' is not a valid course")
+                raise ValueError(f"course '{course}' does not exist")
         numerical_columns = df.columns[6:]
         normalized_data = MinMaxScaler.fit_transform(df[numerical_columns])
         df[numerical_columns] = normalized_data
@@ -35,5 +39,6 @@ if __name__ == "__main__":
         plt.title(f"Scatter Plot: {first_course} vs {second_course}")
         plt.legend()
         plt.show()
+
     except Exception as error:
         print(f"error: {error}")

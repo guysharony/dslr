@@ -1,23 +1,31 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from src.MinMaxScaler import MinMaxScaler
 
 
 if __name__ == "__main__":
-    df = pd.read_csv('./datasets/dataset_train.csv')
-    # print(df.shape)
-    # print(df)
-    # df_sorted = df.sort_values(by='Hogwarts House')
-    # print(df_sorted)
-    gryffindor = df[df['Hogwarts House'] == 'Gryffindor']['Arithmancy']
-    hufflepuff = df[df['Hogwarts House'] == 'Hufflepuff']['Arithmancy']
-    ravenclaw = df[df['Hogwarts House'] == 'Ravenclaw']['Arithmancy']
-    slytherin = df[df['Hogwarts House'] == 'Slytherin']['Arithmancy']
+    try:
+        df = pd.read_csv('./datasets/dataset_train.csv')
+        houses = df['Hogwarts House'].unique()
+        numerical_columns = df.columns[6:]
 
-    plt.hist(gryffindor, alpha=0.5, label='Gryffindor')
-    plt.hist(hufflepuff, alpha=0.5, label='Hufflepuff')
-    plt.hist(ravenclaw, alpha=0.5, label='Ravenclaw')
-    plt.hist(slytherin, alpha=0.5, label='Slythrin')
+        normalized_data = MinMaxScaler.fit_transform(df[numerical_columns])
+        df[numerical_columns] = normalized_data
 
-    plt.legend()
-    plt.show()
-    
+        fig, axs = plt.subplots(nrows=2, ncols=7, figsize=(25, 6))
+        axs = axs.flatten()
+
+        for i, column in enumerate(df.columns[6:]):
+            for house in houses:
+                category_values = df[df['Hogwarts House'] == house][column]
+                axs[i].hist(category_values, alpha=0.5, density=True)
+            axs[i].set_title(f'{column}')
+            axs[i].set_xlabel('Score')
+            axs[i].set_ylabel('Frequency')
+
+        fig.delaxes(axs[13])
+        fig.legend(houses, loc='lower right')
+        plt.tight_layout()
+        plt.show()
+    except Exception as error:
+        print(f"error: {error}")

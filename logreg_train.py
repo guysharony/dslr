@@ -19,7 +19,8 @@ def preprocess_data(df):
     # drop irrelevant columns
     df = df.drop(columns=['First Name', 'Last Name'])
     # replace NaN values by mean
-    df.fillna(df.mean(),inplace=True)
+    # df.fillna(df.mean(),inplace=True)
+    df = df.dropna()
     # convert string to int
     df['Best Hand'] = df['Best Hand'].apply(lambda x : 1 if x == "Right" else 0)
     # convert date string to date object

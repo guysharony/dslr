@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.001, num_iterations=500):
+    def __init__(self, learning_rate=0.001, num_iterations=1000):
         self.learning_rate = learning_rate
         self.num_iterations = num_iterations
         self.weights = None
@@ -28,7 +28,7 @@ class LogisticRegression:
             self.weights -= self.learning_rate * dw
             self.bias -= self.learning_rate * db
 
-            cost = -np.mean(y * np.log(y_pred) + (1 - y) * np.log(1 - y_pred))
+            cost = (1 / (2 * m)) * (np.sum(y_pred - y)**2)
             costs.append(cost)
             print(f'Iteration {i+1}, Cost: {cost}')
         # print(f'WEIGHT:{self.weights}')

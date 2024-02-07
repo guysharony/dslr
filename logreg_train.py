@@ -26,7 +26,7 @@ def preprocess_data(df):
     df['Birthday'] = pd.to_datetime(df['Birthday'])
     # convert date object to int
     df['Birthday'] = df['Birthday'].apply(convert_to_timestamp)
-    df = df.drop(columns=['Birthday'])
+    # df = df.drop(columns=['Birthday'])
     # normalize numerical values
     numerical_columns = df.select_dtypes(include=['float64']).columns
     df[numerical_columns] = normalize(df[numerical_columns])

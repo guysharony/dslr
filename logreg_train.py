@@ -5,11 +5,13 @@ from src.MinMaxScaler import MinMaxScaler
 from src.LogisticRegression import LogisticRegression
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, precision_score
+import pickle
+from src.file_management import save_parameters_to_file
 # best hand convert to 0 and 1 
 # scale date
 
 
-def preprocess_data(df):
+def preprocess_data(df, status):
     def convert_to_timestamp(x):
         """Convert date objects to integers"""
         return time.mktime(x.timetuple())
@@ -19,8 +21,8 @@ def preprocess_data(df):
     # drop irrelevant columns
     df = df.drop(columns=['First Name', 'Last Name'])
     # replace NaN values by mean
-    # df.fillna(df.mean(),inplace=True)
-    df = df.dropna()
+    df.fillna(df.mean(),inplace=True)
+    # df = df.dropna()
     # convert string to int
     df['Best Hand'] = df['Best Hand'].apply(lambda x : 1 if x == "Right" else 0)
     # convert date string to date object
@@ -32,8 +34,11 @@ def preprocess_data(df):
     numerical_columns = df.select_dtypes(include=['float64']).columns
     df[numerical_columns] = normalize(df[numerical_columns])
     # encode Hogwart Houses labels
-    label_encoder = LabelEncoder()
-    df['Hogwarts House'] = label_encoder.fit_transform(df['Hogwarts House'])
+    if status == 'train model':
+        label_encoder = LabelEncoder()
+        df['Hogwarts House'] = label_encoder.fit_transform(df['Hogwarts House'])
+    else:
+        df = df.drop(columns=['Index', 'Hogwarts House'])
     return df
 
 if __name__ == "__main__":
@@ -50,6 +55,9 @@ if __name__ == "__main__":
         y = df['Hogwarts House'].values
 
         model = LogisticRegression()
-        model.fit(X, y)
+        weights, bias = model.fit(X, y)
+        parameters_to_save = {'weights': weights, 'bias': bias}
+        save_parameters_to_file(parameters_to_save, 'weights')
+
     except Exception as error:
         print(f"error: {error}")

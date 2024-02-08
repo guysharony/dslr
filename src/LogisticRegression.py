@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import OneHotEncoder
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.01, num_iterations=10000):
+    def __init__(self, learning_rate=0.1, num_iterations=15000, weights=None, bias=None):
         self.learning_rate = learning_rate
         self.num_iterations = num_iterations
-        self.weights = None
-        self.bias = None
+        self.weights = weights
+        self.bias = bias
 
     def one_hot_encode(self, y):
         """
@@ -53,14 +53,11 @@ class LogisticRegression:
         loss = -np.sum(y_true * np.log(y_pred)) / num_samples
         return loss
 
-    def fit(self, X, y):
+    def fit(self, X:np.ndarray, y:np.ndarray) -> np.ndarray:
         m, n = X.shape
         y_encoded = self.one_hot_encode(y)
         
-        # weights
         self.weights = np.zeros((X.shape[1], y_encoded.shape[1]))
-        weights_lst = []
-        
         self.bias = 0
 
         costs = []
@@ -72,19 +69,22 @@ class LogisticRegression:
 
             self.weights -= self.learning_rate * dw
             self.bias -= self.learning_rate * db
-
             cost = self.cross_entropy_loss(y_encoded, y_pred)
             costs.append(cost)
+            print('cost', cost)
         
         plt.plot(range(1, self.num_iterations + 1), costs)
         plt.xlabel('Iterations')
         plt.ylabel('Cost')
         plt.title('Cost vs Iterations')
         plt.show()
-        return costs
+        return self.weights, self.bias
 
     def predict(self, X):
-        z = np.dot(X, self.weights) + self.bias
-        y_pred = self.softmax(z)
+        print(X)
+        print('weights', self.weights)
+        # z = np.dot(X, self.weights) + self.bias
+        # print(z.shape)
+        y_pred = self.softmax(X)
         return np.argmax(y_pred, axis=1)
 

@@ -37,6 +37,7 @@ def preprocess_data(df, status):
     if status == 'train model':
         label_encoder = LabelEncoder()
         df['Hogwarts House'] = label_encoder.fit_transform(df['Hogwarts House'])
+        list(label_encoder.classes_)
     else:
         df = df.drop(columns=['Index', 'Hogwarts House'])
     return df

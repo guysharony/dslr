@@ -3,6 +3,10 @@ import pandas as pd
 from src.file_management import load_parameters_from_file
 from logreg_train import preprocess_data
 from src.LogisticRegression import LogisticRegression
+from sklearn.preprocessing import LabelEncoder
+
+house_names = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']
+
 if __name__ == "__main__":
     try:
         assert len(sys.argv) == 3, "2 arguments required"
@@ -22,5 +26,7 @@ if __name__ == "__main__":
         print(X.shape)
         predictions = model.predict(X)
         print(predictions)
+        decoded_predictions = [house_names[label] for label in predictions]
+        print(decoded_predictions)
     except Exception as error:
         print(f"error: {error}")

@@ -1,4 +1,4 @@
-class LinearRegression:
+class LogisticRegression:
     def __init__(self) -> None:
         pass
 

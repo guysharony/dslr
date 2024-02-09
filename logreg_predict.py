@@ -3,7 +3,7 @@ import pandas as pd
 
 from src.DataProcess import data_process
 from src.LogisticRegression import LogisticRegression
-from src.file_management import load_parameters_from_file
+from src.file_management import load_parameters_from_file, create_output_csv
 
 house_names = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']
 
@@ -23,6 +23,8 @@ if __name__ == "__main__":
         predictions = model.predict(x)
 
         decoded_predictions = [house_names[label] for label in predictions]
-        print(decoded_predictions)
+
+        create_output_csv('houses', decoded_predictions)        
+
     except Exception as error:
         print(f"error: {error}")

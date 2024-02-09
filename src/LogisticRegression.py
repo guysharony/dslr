@@ -88,8 +88,8 @@ class LogisticRegression:
 
             cost = self.cross_entropy_loss(y_encoded, y_pred)
             costs.append(cost)
-            print(f'cost[{i}]: {cost}')
-        
+            #print(f'cost[{i}]: {cost}')
+
         plt.plot(range(1, self.num_iterations + 1), costs)
         plt.xlabel('Iterations')
         plt.ylabel('Cost')

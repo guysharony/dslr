@@ -1,4 +1,5 @@
 import pickle
+import pandas as pd
 
 def save_parameters_to_file(parameters, filename):
     """
@@ -30,3 +31,15 @@ def load_parameters_from_file(filename):
     except FileNotFoundError:
         print(f"Parameters '{filename}' not loaded. Model hasn't been trained yet")
         return None
+
+def create_output_csv(filename: str, output_df: pd.DataFrame):
+    """
+    Creates a csv file containing predictions
+
+    Args:
+        filename (str): name of the output csv file
+        output_df (pd.DataFrame): dataframe containing the predictions
+    """
+    output_df = pd.DataFrame({'Index': range(len(output_df)), 'Hogwarts House': output_df})
+    output_df.to_csv(f'{filename}.csv', index=False)
+    print(f'{filename}.csv created')

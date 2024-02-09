@@ -1,9 +1,12 @@
 import pandas as pd
+from pandas.api.types import is_numeric_dtype
 import matplotlib.pyplot as plt
 from src.MinMaxScaler import MinMaxScaler
 from src.Compute import Compute
 import sys as sys
 import numpy as np
+
+
 
 if __name__ == "__main__":
     try:
@@ -17,6 +20,10 @@ if __name__ == "__main__":
         for course in [first_course, second_course]:
             if course not in df.columns:
                 raise ValueError(f"course '{course}' does not exist")
+            if is_numeric_dtype(df[course]) == False:
+                raise TypeError(f"{course} is not a valid course")
+
+
         numerical_columns = df.columns[6:]
         normalized_data = MinMaxScaler.fit_transform(df[numerical_columns])
         df[numerical_columns] = normalized_data
@@ -37,7 +44,7 @@ if __name__ == "__main__":
         plt.xlabel(first_course)
         plt.ylabel(second_course)
         plt.title(f"Scatter Plot: {first_course} vs {second_course}")
-        plt.legend()
+        plt.legend(loc='lower right', bbox_to_anchor=(1.05, 0), borderaxespad=0)
         plt.show()
 
     except Exception as error:

@@ -46,7 +46,7 @@ if __name__ == "__main__":
     try:
         assert len(sys.argv) == 2, "1 argument required"
         df = pd.read_csv(sys.argv[1])
-        df = preprocess_data(df)
+        df = preprocess_data(df, 'train model')
 
         print(df)
         # to get types 

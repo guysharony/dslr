@@ -1,7 +1,7 @@
 import numpy as np
 
 class LogisticRegression:
-    def __init__(self, thetas, alpha=0.001, max_iter=100000):
+    def __init__(self, thetas, alpha=0.000000000000001, max_iter=100):
         self.alpha = alpha
         self.max_iter = max_iter
         self.thetas = thetas
@@ -14,13 +14,10 @@ class LogisticRegression:
         return 1 / (1 + np.exp(-x))
 
     def gradient_(self, x, y):
-        if x.__class__ != np.ndarray or y.__class__ != np.ndarray or self.thetas.__class__ != np.ndarray:
+        if x.__class__ != np.ndarray or y.__class__ != np.ndarray:
             return None
 
-        if x.shape[1] + 1 != self.thetas.shape[0]:
-            return None
-
-        if x.size == 0 or y.size == 0 or self.thetas.size == 0:
+        if x.size == 0 or y.size == 0:
             return None
 
         m = x.shape[0]
@@ -33,10 +30,7 @@ class LogisticRegression:
         if x.__class__ != np.ndarray or self.thetas.__class__ != np.ndarray:
             return None
 
-        if x.size == 0 or self.thetas.size == 0:
-            return None
-
-        if x.shape[1] + 1 != self.thetas.shape[0]:
+        if x.size == 0:
             return None
 
         x_prime = np.hstack((np.ones((x.shape[0], 1)), x))
@@ -58,16 +52,11 @@ class LogisticRegression:
         )
 
     def fit_(self, x, y):
-        if x.__class__ != np.ndarray or y.__class__ != np.ndarray or self.thetas.__class__ != np.ndarray:
-            return None
-
-        if x.size == 0 or self.thetas.size == 0:
-            return None
-
-        if self.thetas.shape[0] != x.shape[1] + 1 or x.shape[0] != y.shape[0]:
+        if x.size == 0:
             return None
 
         for _ in range(self.max_iter):
             gradient = self.gradient_(x, y)
             self.thetas -= self.alpha * gradient
+
         return self.thetas

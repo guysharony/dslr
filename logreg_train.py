@@ -1,64 +1,24 @@
-import pandas as pd
 import sys as sys
-import time
-from src.MinMaxScaler import MinMaxScaler
+import pandas as pd
+
+from src.DataProcess import data_process
 from src.LogisticRegression import LogisticRegression
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import accuracy_score, precision_score
-import pickle
 from src.file_management import save_parameters_to_file
-# best hand convert to 0 and 1 
-# scale date
-
-
-def preprocess_data(df, status):
-    def convert_to_timestamp(x):
-        """Convert date objects to integers"""
-        return time.mktime(x.timetuple())
-    def normalize(data):
-        return MinMaxScaler.fit_transform(data)
-
-    # drop irrelevant columns
-    df = df.drop(columns=['First Name', 'Last Name'])
-    # replace NaN values by mean
-    df.fillna(df.mean(),inplace=True)
-    # df = df.dropna()
-    # convert string to int
-    df['Best Hand'] = df['Best Hand'].apply(lambda x : 1 if x == "Right" else 0)
-    # convert date string to date object
-    df['Birthday'] = pd.to_datetime(df['Birthday'])
-    # convert date object to int
-    df['Birthday'] = df['Birthday'].apply(convert_to_timestamp)
-    # df = df.drop(columns=['Birthday'])
-    # normalize numerical values
-    numerical_columns = df.select_dtypes(include=['float64']).columns
-    df[numerical_columns] = normalize(df[numerical_columns])
-    # encode Hogwart Houses labels
-    if status == 'train model':
-        label_encoder = LabelEncoder()
-        df['Hogwarts House'] = label_encoder.fit_transform(df['Hogwarts House'])
-        list(label_encoder.classes_)
-    else:
-        df = df.drop(columns=['Index', 'Hogwarts House'])
-    return df
 
 if __name__ == "__main__":
     try:
         assert len(sys.argv) == 2, "1 argument required"
-        df = pd.read_csv(sys.argv[1])
-        df = preprocess_data(df, 'train model')
 
-        print(df)
-        # to get types 
-        print(pd.DataFrame(df.dtypes).rename(columns = {0:'dtype'}))
-
-        X =  df.drop(columns=['Index', 'Hogwarts House']).values
-        y = df['Hogwarts House'].values
+        dataset = pd.read_csv(sys.argv[1])
+        x, y = data_process(dataset, 'train model')
 
         model = LogisticRegression()
-        weights, bias = model.fit(X, y)
-        parameters_to_save = {'weights': weights, 'bias': bias}
-        save_parameters_to_file(parameters_to_save, 'weights')
+        weights, bias = model.fit(x, y)
+
+        save_parameters_to_file({
+            'weights': weights,
+            'bias': bias
+        }, 'weights')
 
     except Exception as error:
         print(f"error: {error}")

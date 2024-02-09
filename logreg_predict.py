@@ -1,31 +1,27 @@
 import sys as sys
 import pandas as pd
-from src.file_management import load_parameters_from_file
-from logreg_train import preprocess_data
+
+from src.DataProcess import data_process
 from src.LogisticRegression import LogisticRegression
-from sklearn.preprocessing import LabelEncoder
+from src.file_management import load_parameters_from_file
 
 house_names = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']
 
 if __name__ == "__main__":
     try:
         assert len(sys.argv) == 3, "2 arguments required"
-        df = pd.read_csv(sys.argv[1])
-        # print(df)
 
-        df = preprocess_data(df, 'test model')
-        print(df.shape)
+        df = pd.read_csv(sys.argv[1])
+
+        x, _ = data_process(df, 'test model')
+
         parameters = load_parameters_from_file(sys.argv[2])
         weights = parameters['weights']
         bias = parameters['bias']
-        print(weights, bias)
-
 
         model = LogisticRegression(None, None, weights, bias)
-        X = df
-        print(X.shape)
-        predictions = model.predict(X)
-        print(predictions)
+        predictions = model.predict(x)
+
         decoded_predictions = [house_names[label] for label in predictions]
         print(decoded_predictions)
     except Exception as error:

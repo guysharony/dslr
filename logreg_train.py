@@ -18,7 +18,7 @@ if __name__ == "__main__":
         x_train, x_test, y_train, y_test = data_spliter(x, y, 0.8)
 
         # model
-        model = LogisticRegression()
+        model = LogisticRegression(batch_size=5)
 
         # Training
         weights, bias = model.fit(x_train, y_train)

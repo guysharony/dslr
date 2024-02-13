@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
         decoded_predictions = [house_names[label] for label in predictions]
 
-        create_output_csv('houses', decoded_predictions)        
+        create_output_csv('houses', decoded_predictions)
 
     except Exception as error:
         print(f"error: {error}")

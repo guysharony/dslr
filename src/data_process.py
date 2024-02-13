@@ -16,7 +16,9 @@ def normalize(data):
 def data_process(dataset, status):
     dataset = dataset.dropna(axis=1, how='all')
     dataset = dataset.drop(columns=['First Name', 'Last Name'])
-    dataset = dataset.dropna()
+
+    if status == 'train model':
+        dataset = dataset.dropna()
 
     dataset['Best Hand'] = dataset['Best Hand'].apply(lambda x : 1 if x == "Right" else 0)
     dataset['Birthday'] = dataset['Birthday'].apply(convert_to_timestamp)

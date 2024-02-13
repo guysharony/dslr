@@ -12,7 +12,7 @@ def main():
 
         dataframe = pd.DataFrame(
             columns=columns,
-            index=['Count', 'Mean', 'Std', 'Min', '25%', '50%', '75%', 'Max']
+            index=['Count', 'Mean', 'Std', 'Min', '25%', '50%', '75%', 'Max', 'Median', 'Skewness', 'Kurtosis']
         )
 
         for column in columns:
@@ -25,6 +25,9 @@ def main():
             dataframe[column]['50%'] = '{:9f}'.format(Compute.percentile(values, 50))
             dataframe[column]['75%'] = '{:9f}'.format(Compute.percentile(values, 75))
             dataframe[column]['Max'] = '{:9f}'.format(Compute.max(values))
+            dataframe[column]['Median'] = '{:9f}'.format(Compute.median(values))
+            dataframe[column]['Skewness'] = '{:9f}'.format(Compute.skewness(values))
+            dataframe[column]['Kurtosis'] = '{:9f}'.format(Compute.kurtosis(values))
 
         print(dataframe)
 

@@ -102,3 +102,67 @@ class Compute:
             return None
 
         return variance ** 0.5
+
+    @staticmethod
+    def median(values) -> Union[float, None]:
+        numeric_values = Compute.numeric(values)
+
+        if not numeric_values:
+            return None
+
+        sorted_values = sorted(numeric_values)
+        n = len(sorted_values)
+        middle_index = n // 2
+
+        if n % 2 == 0:
+            return (sorted_values[middle_index - 1] + sorted_values[middle_index]) / 2
+        else:
+            return sorted_values[middle_index]
+
+
+    @staticmethod
+    def skewness(values) -> Union[float, None]:
+        numeric_values = Compute.numeric(values)
+
+        if not numeric_values:
+            return None
+
+        n = len(numeric_values)
+        _mean = Compute.mean(numeric_values)
+        _std = Compute.std(numeric_values)
+
+        if _mean is None:
+            return None
+        
+        if _std is None:
+            return None
+
+        _sum = Compute.sum(((value - _mean) ** 3) / n for value in numeric_values)
+        if not _sum:
+            return None
+
+        return _sum / (_std ** 3)
+
+
+    @staticmethod
+    def kurtosis(values) -> Union[float, None]:
+        numeric_values = Compute.numeric(values)
+
+        if not numeric_values:
+            return None
+
+        n = len(numeric_values)
+        _mean = Compute.mean(numeric_values)
+        _std = Compute.std(numeric_values)
+
+        if _mean is None:
+            return None
+
+        if _std is None:
+            return None
+
+        _sum = Compute.sum(((value - _mean) ** 4) for value in numeric_values)
+        if not _sum:
+            return None
+
+        return (_sum / (n * (_std ** 4))) - 3

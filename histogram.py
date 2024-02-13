@@ -5,6 +5,16 @@ from src.Compute import Compute
 from src.min_max_scaler import fit_transform
 
 def main():
+    """
+    Read a dataset, normalize numerical columns, and analyze score distributions across Hogwarts houses.
+    The score distributions are also analyzed by computing standard deviation of scores of each course.
+    The most homogeneous score is the smallest standard deviation
+    Plots histograms to visualize score distributions for each course.
+
+    Raises:
+        Exception: if error occurs during file reading or computation.
+
+    """
     try:
         dataset = pd.read_csv('./datasets/dataset_train.csv')
         houses = dataset['Hogwarts House'].unique()
@@ -23,6 +33,13 @@ def main():
         min_std_index = courses_std.index(Compute.min(courses_std))
         print(f"{dataset.columns[6:][min_std_index]} has the most homogeneous score distribution between all four houses.")
 
+        color_map = {
+            'Gryffindor': 'red',
+            'Hufflepuff': 'yellow',
+            'Ravenclaw': 'blue',
+            'Slytherin': 'green'
+        }
+
         # plot histograms
         fig, axs = plt.subplots(nrows=2, ncols=7, figsize=(25, 6))
         axs = axs.flatten()
@@ -31,7 +48,7 @@ def main():
 
             for house in houses:
                 category_values = dataset[dataset['Hogwarts House'] == house][column]
-                axs[i].hist(category_values, alpha=0.5, density=True)
+                axs[i].hist(category_values, alpha=0.5, density=True, color=color_map[house])
 
             axs[i].set_title(f'{column}')
             axs[i].set_xlabel('Score')

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.05, max_iterations=15000, weights=[], bias=0, batch_size=None):
+    def __init__(self, learning_rate=0.05, max_iterations=1500, weights=[], bias=0, batch_size=None):
         self.learning_rate = learning_rate
         self.max_iterations = max_iterations
         self.weights = weights
@@ -85,11 +85,10 @@ class LogisticRegression:
                 x_batch = x
                 y_batch = y_encoded
             elif self.batch_size == 1:
-                index = np.arange(m)
-                np.random.shuffle(index)
+                random_index = np.random.randint(0, m)
 
-                x_batch = x[index]
-                y_batch = y_encoded[index]
+                x_batch = x[random_index].reshape(1, -1)
+                y_batch = y_encoded[random_index].reshape(1, -1)
             else:
                 np.random.seed(i)
 

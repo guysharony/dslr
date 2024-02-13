@@ -1,7 +1,7 @@
 import sys as sys
 import pandas as pd
 
-from src.DataProcess import data_process
+from src.data_process import data_process
 from src.LogisticRegression import LogisticRegression
 from src.file_management import load_parameters_from_file, create_output_csv
 

@@ -8,7 +8,7 @@ from src.file_management import save_parameters_to_file
 house_names = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']
 
 if __name__ == "__main__":
-    try:
+    #try:
         assert len(sys.argv) == 2, "1 argument required"
 
         dataset = pd.read_csv(sys.argv[1])
@@ -26,5 +26,5 @@ if __name__ == "__main__":
             'bias': bias
         }, 'weights')
 
-    except Exception as error:
-        print(f"error: {error}")
+    #except Exception as error:
+    #    print(f"error: {error}")

@@ -1,13 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import OneHotEncoder
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.1, num_iterations=15000, weights=None, bias=None):
+    def __init__(self, learning_rate=0.05, max_iterations=15000, weights=[], bias=0, batch_size=None):
         self.learning_rate = learning_rate
-        self.num_iterations = num_iterations
+        self.max_iterations = max_iterations
         self.weights = weights
         self.bias = bias
+        self.batch_size = batch_size
 
     def one_hot_encode(self, y) -> np.array:
         """
@@ -24,7 +24,7 @@ class LogisticRegression:
             one_hot_y[i, y[i]] = 1
         return one_hot_y
 
-    def softmax(self, X) -> np.array:
+    def softmax(self, x) -> np.array:
         """
         Compute the probabilities of each class,
         ensuring that the sum of probabilities across all classes equals 1.
@@ -35,11 +35,14 @@ class LogisticRegression:
         Returns:
             np.array: probabilities of each class
         """
-        z = np.dot(X, self.weights) + self.bias
-        exp_z = np.exp(z)
-        return exp_z / np.sum(exp_z, axis=1, keepdims=True)
+        #z = np.dot(x, self.weights) + self.bias
+        #exp_z = np.exp(z)
+        #return exp_z / np.sum(exp_z, axis=1, keepdims=True)
 
-    
+        z = np.dot(x, self.weights) + self.bias
+        exp_z = np.exp(-z)
+        return 1 / (1 + exp_z)
+
     def cross_entropy_loss(self, y_true, y_pred) -> np.array:
         """
         Compute the cross-entropy loss for multinomial logistic regression
@@ -59,7 +62,7 @@ class LogisticRegression:
         loss = -np.sum(y_true * np.log(y_pred)) / num_samples
         return loss
 
-    def fit(self, X:np.ndarray, y:np.ndarray) -> np.ndarray:
+    def fit(self, x:np.ndarray, y:np.ndarray) -> np.ndarray:
         """
         Train the multinomial logistic regression model
 
@@ -70,27 +73,51 @@ class LogisticRegression:
         Returns:
             np.ndarray: Tuple containing the trained weights and bias
         """
-        m, n = X.shape
+        m, n = x.shape
         y_encoded = self.one_hot_encode(y)
-        
-        self.weights = np.zeros((X.shape[1], y_encoded.shape[1]))
+
+        self.weights = np.zeros((n, y_encoded.shape[1]))
         self.bias = 0
 
         costs = []
-        for i in range(self.num_iterations):
-            y_pred = self.softmax(X)
+        for i in range(self.max_iterations):
+            if self.batch_size is None:
+                x_batch = x
+                y_batch = y_encoded
+            elif self.batch_size == 1:
+                index = np.arange(m)
+                np.random.shuffle(index)
 
-            dw = (1 / m) * np.dot(X.T, (y_pred - y_encoded))
-            db = (1 / m) * np.sum(y_pred - y_encoded, axis=0)
+                x_batch = x[index]
+                y_batch = y_encoded[index]
+            else:
+                np.random.seed(i)
+
+                # Combining x and y
+                combined_data = list(zip(x, y_encoded))
+                np.random.shuffle(combined_data)
+                x_shuffled, y_shuffled = zip(*combined_data)
+
+                x_shuffled = np.array(x_shuffled)
+                y_shuffled = np.array(y_shuffled)
+
+                x_batch = x_shuffled[:self.batch_size]
+                y_batch = y_shuffled[:self.batch_size]
+
+            y_prediction = self.softmax(x_batch)
+
+            dw = (1 / len(x_batch)) * np.dot(x_batch.T, (y_prediction - y_batch))
+            db = (1 / len(x_batch)) * np.sum(y_prediction - y_batch, axis=0)
 
             self.weights -= self.learning_rate * dw
             self.bias -= self.learning_rate * db
 
-            cost = self.cross_entropy_loss(y_encoded, y_pred)
+            cost = self.cross_entropy_loss(y_batch, y_prediction)
             costs.append(cost)
-            print(f'cost[{i}]: {cost}')
-        
-        plt.plot(range(1, self.num_iterations + 1), costs)
+
+        print(f'Cost : [{costs[0]}] -> [{costs[-1]}]')
+
+        plt.plot(range(1, self.max_iterations + 1), costs)
         plt.xlabel('Iterations')
         plt.ylabel('Cost')
         plt.title('Cost vs Iterations')

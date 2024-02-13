@@ -5,6 +5,15 @@ class Compute:
 
     @staticmethod
     def numeric(values) -> list[float]:
+        """
+        Extracts numeric values from a list, filtering out NaNs.
+
+        Args:
+            values (list): List of values
+
+        Returns:
+            list[float]: _description_
+        """
         return [float(value) for value in values if not np.isnan(float(value))]
 
     @staticmethod

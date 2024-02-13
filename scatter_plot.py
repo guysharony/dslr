@@ -6,6 +6,18 @@ from pandas.api.types import is_numeric_dtype
 from src.min_max_scaler import fit_transform
 
 def main():
+    """
+    Plot a scatter plot comparing two courses' scores for students from different Hogwarts houses.
+    Reads a dataset from a CSV file and plots a scatter plot comparing the scores of two specified courses 
+    for students from different Hogwarts houses.
+
+    Raises:
+        AssertionError: Raised when incorrect number of command-line arguments is provided.
+        ValueError: Raised when the same course is specified for both axes or when the specified course does not exist in the dataset.
+        TypeError: Raised when the specified course is not a valid numerical course.
+        Exception: Raised for any other errors that occur during execution.
+
+    """
     try:
         assert len(sys.argv) == 3, "2 arguments required"
         first_course = sys.argv[1]

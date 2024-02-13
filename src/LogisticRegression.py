@@ -5,6 +5,16 @@ from typing import Tuple
 
 class LogisticRegression:
     def __init__(self, learning_rate=0.1, max_iterations=1500, weights=[], bias=0, batch_size=None):
+        """
+        Initialize the multinomial logistic regression model.
+
+        Args:
+            learning_rate (float): learning rate for gradient descent optimization. Default is 0.1.
+            max_iterations (int): maximum number of iterations for training. Default is 1500.
+            weights (list): initial weights for the model. Default is an empty list.
+            bias (int): initial bias for the model. Default is 0.
+            batch_size (int): size of the batch for gradient descent. Defaults to None.
+        """
         self.learning_rate = learning_rate
         self.max_iterations = max_iterations
         self.weights = weights
@@ -28,8 +38,8 @@ class LogisticRegression:
 
     def softmax(self, x) -> np.array:
         """
-        Compute the probabilities of each class,
-        ensuring that the sum of probabilities across all classes equals 1.
+        Compute the probabilities of each class using softmax function.
+        Softmax function normalizes data points into a probability distribution
 
         Args:
             X (np.array): features input
@@ -43,7 +53,7 @@ class LogisticRegression:
 
     def cross_entropy_loss(self, y_true, y_pred) -> np.array:
         """
-        Compute the cross-entropy loss for multinomial logistic regression
+        Compute the multi-class cross-entropy loss
 
         Args:
             y_true (numpy.ndarray): Array of true labels in one-hot encoded format.
@@ -62,11 +72,14 @@ class LogisticRegression:
 
     def fit(self, x:np.ndarray, y:np.ndarray) -> Tuple[np.ndarray, float]:
         """
-        Train the multinomial logistic regression model
+        Train the multinomial logistic regression model using the input features (x) and corresponding labels (y).
+        It implements gradient descent optimization to minimize the cross-entropy loss function.
+        Multi-class Softmax activation function to compute class probabilities.
+        Three types of gradient descent: Batch, Stochastic, and Mini-batch, based on the batch_size parameter.
 
         Args:
-            X (np.ndarray): input features
-            y (np.ndarray): labels
+            X (np.ndarray): input features of shape (num_samples, num_features)
+            y (np.ndarray): labels corresponding to X encoded as integers
 
         Returns:
             np.ndarray: Tuple containing the trained weights and bias
@@ -129,12 +142,16 @@ class LogisticRegression:
     def predict(self, X):
         """
         Makes predictions using the trained weights and bias
-
+        Softmax function is applied to the linear combination of input features and weight and bias term.
+        This produces a vector of probabilities representing the likelihood of each class.
+        The class with the highest probability is selected as the predicted class for each input sample.
         Args:
             X (np.array): input features
 
         Returns:
             np.array: predicted labels
         """
+        if (len(self.weights) == 0 or self.bias == 0).any():
+            raise ValueError("Weights or bias not initialized. Model must be trained before making predictions.")
         y_pred = self.softmax(X)
         return np.argmax(y_pred, axis=1)

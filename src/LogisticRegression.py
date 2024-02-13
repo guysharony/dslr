@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from typing import Tuple
+
 class LogisticRegression:
     def __init__(self, learning_rate=0.1, max_iterations=1500, weights=[], bias=0, batch_size=None):
         self.learning_rate = learning_rate
@@ -58,7 +60,7 @@ class LogisticRegression:
         loss = - (1/num_samples) * np.sum(y_true * np.log(y_pred))
         return loss
 
-    def fit(self, x:np.ndarray, y:np.ndarray) -> np.ndarray:
+    def fit(self, x:np.ndarray, y:np.ndarray) -> Tuple[np.ndarray, float]:
         """
         Train the multinomial logistic regression model
 
@@ -77,15 +79,15 @@ class LogisticRegression:
 
         costs = []
         for i in range(self.max_iterations):
-            if self.batch_size is None:
+            if self.batch_size is None: # Batch gradient descent
                 x_batch = x
                 y_batch = y_encoded
-            elif self.batch_size == 1:
+            elif self.batch_size == 1: # Stochastic gradient descent
                 random_index = np.random.randint(0, m)
 
                 x_batch = x[random_index].reshape(1, -1)
                 y_batch = y_encoded[random_index].reshape(1, -1)
-            else:
+            else: # Mini-batch gradient descent
                 np.random.seed(i)
 
                 # Combining x and y
@@ -99,14 +101,18 @@ class LogisticRegression:
                 x_batch = x_shuffled[:self.batch_size]
                 y_batch = y_shuffled[:self.batch_size]
 
+            # Prediction
             y_prediction = self.softmax(x_batch)
 
+            # Computing derivative
             dw = (1 / len(x_batch)) * np.dot(x_batch.T, (y_prediction - y_batch))
             db = (1 / len(x_batch)) * np.sum(y_prediction - y_batch, axis=0)
 
+            # Updating weights and bias
             self.weights -= self.learning_rate * dw
             self.bias -= self.learning_rate * db
 
+            # Saving cost
             cost = self.cross_entropy_loss(y_batch, y_prediction)
             costs.append(cost)
 
@@ -117,6 +123,7 @@ class LogisticRegression:
         plt.ylabel('Cost')
         plt.title('Cost vs Iterations')
         plt.show()
+
         return self.weights, self.bias
 
     def predict(self, X):
@@ -131,4 +138,3 @@ class LogisticRegression:
         """
         y_pred = self.softmax(X)
         return np.argmax(y_pred, axis=1)
-

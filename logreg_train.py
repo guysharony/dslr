@@ -9,6 +9,11 @@ from src.file_management import save_parameters_to_file
 from src.LogisticRegression import LogisticRegression
 
 def main():
+    """
+     Reads the dataset from a CSV file, preprocesses the data,
+     splits it into training and test sets, trains a logistic regression model on the training data,
+     evaluates its accuracy on the test data, and saves the trained model parameters to a file.
+    """
     try:
         assert len(sys.argv) == 2, "1 argument required"
 

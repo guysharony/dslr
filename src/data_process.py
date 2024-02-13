@@ -7,17 +7,52 @@ from src.min_max_scaler import fit_transform
 
 house_names = ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin']
 
-def decode_house(house):
-        return house_names[house]
+def decode_house(house: int) -> str:
+    """
+    Decode the encoded house index to its corresponding house name.
 
-def encode_house(house):
-        return house_names.index(house)
+    Args:
+        house (int): The encoded index of the house.
 
-def convert_to_timestamp(x):
-    """Convert date objects to integers"""
+    Returns:
+        str : The corresponding house name
+    """
+    return house_names[house]
+
+def encode_house(house: str) -> int:
+    """
+    Encode the house name to its corresponding index.
+
+    Args:
+        house (str): The name of the house
+    Returns:
+        int: The encoded index of the house
+    """
+    return house_names.index(house)
+
+def convert_to_timestamp(x) -> int:
+    """
+    Convert date objects to timestamps.
+
+    Args:
+        x: the date object
+
+    Returns:
+        int: the timestamp of the date
+    """
     return time.mktime(pd.to_datetime(x).timetuple())
 
 def data_process(dataset, status):
+    """
+    Preprocess the dataset by performing transformations.
+
+    Args:
+        dataset (pd.DataFrame): dataset to be processed
+        status (str): indicates the purpose of processsing
+
+    Returns:
+        Tuple[np.ndarray, np.ndarray]: The processed features (x) and labels (y).
+    """
     dataset = dataset.dropna(axis=1, how='all')
     dataset = dataset.drop(columns=['First Name', 'Last Name'])
 

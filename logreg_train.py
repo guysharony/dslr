@@ -9,7 +9,7 @@ from src.file_management import save_parameters_to_file
 from src.LogisticRegression import LogisticRegression
 
 def main():
-    #try:
+    try:
         assert len(sys.argv) == 2, "1 argument required"
 
         dataset = pd.read_csv(sys.argv[1])
@@ -36,8 +36,8 @@ def main():
             'bias': bias
         }, 'weights')
 
-    #except Exception as error:
-    #    print(f"error: {error}")
+    except Exception as error:
+        print(f"error: {error}")
 
 if __name__ == "__main__":
     main()

@@ -2,9 +2,7 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype
 import matplotlib.pyplot as plt
 from src.MinMaxScaler import MinMaxScaler
-from src.Compute import Compute
 import sys as sys
-import numpy as np
 
 
 

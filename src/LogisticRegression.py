@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.05, max_iterations=1500, weights=[], bias=0, batch_size=None):
+    def __init__(self, learning_rate=0.1, max_iterations=1500, weights=[], bias=0, batch_size=None):
         self.learning_rate = learning_rate
         self.max_iterations = max_iterations
         self.weights = weights
@@ -35,13 +35,9 @@ class LogisticRegression:
         Returns:
             np.array: probabilities of each class
         """
-        #z = np.dot(x, self.weights) + self.bias
-        #exp_z = np.exp(z)
-        #return exp_z / np.sum(exp_z, axis=1, keepdims=True)
-
         z = np.dot(x, self.weights) + self.bias
-        exp_z = np.exp(-z)
-        return 1 / (1 + exp_z)
+        exp_z = np.exp(z)
+        return exp_z / np.sum(exp_z, axis=1, keepdims=True)
 
     def cross_entropy_loss(self, y_true, y_pred) -> np.array:
         """
@@ -59,7 +55,7 @@ class LogisticRegression:
         epsilon = 1e-15
         # to avoid log(0)
         y_pred = np.clip(y_pred, epsilon, 1 - epsilon)
-        loss = -np.sum(y_true * np.log(y_pred)) / num_samples
+        loss = - (1/num_samples) * np.sum(y_true * np.log(y_pred))
         return loss
 
     def fit(self, x:np.ndarray, y:np.ndarray) -> np.ndarray:

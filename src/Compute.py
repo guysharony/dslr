@@ -5,10 +5,28 @@ class Compute:
 
     @staticmethod
     def numeric(values) -> list[float]:
+        """
+        Extracts numeric values from a list, filtering out NaNs
+
+        Args:
+            values (list): list of values
+
+        Returns:
+            list[float]: list of numeric values
+        """
         return [float(value) for value in values if not np.isnan(float(value))]
 
     @staticmethod
     def sum(values) -> Union[float, None]:
+        """
+        Calculates the sum of the values 
+
+        Args:
+            values (list): list of values
+
+        Returns:
+            Union[float, None]: sums of the values
+        """
         numeric_values = Compute.numeric(values)
 
         _sum = 0
@@ -19,6 +37,15 @@ class Compute:
 
     @staticmethod
     def count(values) -> Union[float, None]:
+        """
+        Counts the number of numeric values.
+
+        Args:
+            values (list): list of values
+
+        Returns:
+            Union[float, None]: number of numeric values
+        """
         if len(values) == 0:
             return None
 
@@ -26,6 +53,16 @@ class Compute:
 
     @staticmethod
     def mean(values) -> Union[float, None]:
+        """
+        Calculate the mean of a list of values.
+
+        Args:
+            values (values): list of values
+
+        Returns:
+            Union[float, None]: the mean of the values
+        """
+
         _sum = Compute.sum(values)
         _len = Compute.count(values)
 
@@ -36,6 +73,16 @@ class Compute:
 
     @staticmethod
     def percentile(values, p) -> Union[float, None]:
+        """
+        Calculate the p-th percentile of a list of values
+        A percentile describes the position of a particular value within a dataset
+        Args:
+            values (list): list of values
+            p (int): the selected percentile, should be between 0 and 100
+
+        Returns:
+            Union[float, None]: the p-th percentile of a list of values.
+        """
         if len(values) == 0:
             return None
 
@@ -55,6 +102,16 @@ class Compute:
 
     @staticmethod
     def min(values) -> Union[float, None]:
+        """
+        Find the smallest value in a list of values.
+
+        Args:
+            values (list): list of values
+
+        Returns:
+            Union[float, None]: return the minimum value 
+        """
+        
         if len(values) == 0:
             return None
 
@@ -68,6 +125,15 @@ class Compute:
 
     @staticmethod
     def max(values) -> Union[float, None]:
+        """
+        Find the largest value in a list of values.
+
+        Args:
+            values (list): list of values
+
+        Returns:
+            Union[float, None]: return the maximum value 
+        """
         if len(values) == 0:
             return None
 
@@ -81,6 +147,18 @@ class Compute:
 
     @staticmethod
     def var(values) -> Union[float, None]:
+        """
+        Calculate the variance of a list of values.
+        Variance measures the average squared deviation of data points from their mean
+        to quantify the spread of a dataset
+
+        Args:
+            values (list): list of values
+
+        Returns:
+            Union[float, None]: the variance of a list of values
+        """
+
         _mean = Compute.mean(values)
 
         if not _mean:
@@ -96,6 +174,17 @@ class Compute:
 
     @staticmethod
     def std(values) -> Union[float, None]:
+        """
+        Calculate the standard deviation of a list of values.
+        Standard deviation is the square root of the variance
+        and expresses the spread in the same units as the original data.
+
+        Args:
+            values (list): list of values
+
+        Returns:
+            Union[float, None]: the standard deviation of the list of values
+        """
         variance = Compute.var(values)
 
         if variance is None:
@@ -105,6 +194,17 @@ class Compute:
 
     @staticmethod
     def median(values) -> Union[float, None]:
+        """
+        Calculate the median of a list of values.
+        The median is a measure of central tendency in a dataset,
+        representing the middle value when the data points are arranged in ascending or descending order.
+
+        Args:
+            values (list): list of values
+
+        Returns:
+            Union[float, None]: the median of the list of values
+        """
         numeric_values = Compute.numeric(values)
 
         if not numeric_values:
@@ -122,6 +222,16 @@ class Compute:
 
     @staticmethod
     def skewness(values) -> Union[float, None]:
+        """
+        Calculate the skewness of a list of values.
+        Skewness measures the asymmetry of the distribution of a set of data points around its mean
+
+        Args:
+            values (list): list of values
+
+        Returns:
+            Union[float, None]: the skewness of the list of values
+        """
         numeric_values = Compute.numeric(values)
 
         if not numeric_values:
@@ -146,6 +256,16 @@ class Compute:
 
     @staticmethod
     def kurtosis(values) -> Union[float, None]:
+        """
+        Calculate the kurtosis of a list of values.
+        Kurtosis quantifies the "peak" of the distribution of a dataset relative to the normal distribution
+
+        Args:
+            values (list): list of values
+
+        Returns:
+            Union[float, None]: the kurtosis of the list of values
+        """
         numeric_values = Compute.numeric(values)
 
         if not numeric_values:

@@ -4,6 +4,14 @@ import pandas as pd
 from src.Compute import Compute
 
 def main():
+    """
+    Read a CSV file by the 1st command line argument and compute statistics for numerical columns.
+    The results are displayed in a formatted dataframe
+
+    Raises:
+        Exception: if error occurs during file reading or computation.
+
+    """
     try:
         filename = sys.argv[1]
         dataset = pd.read_csv(filename, index_col=0)

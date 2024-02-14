@@ -2,6 +2,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def main():
+    """
+    Generate a grid of histograms and scatter plots to visualize relationships between numerical features.
+
+    Reads a dataset from a CSV file, drops columns with all NaN values, and generates a grid of histograms
+    and scatter plots to visualize relationships between numerical features for different Hogwarts houses.
+
+    Raises:
+        Exception: An error occurred during file reading or plotting.
+    """
     try:
         filename = './datasets/dataset_train.csv'
         dataset = pd.read_csv(filename, index_col=0)
@@ -15,7 +24,7 @@ def main():
             nrows=numerical_features,
             ncols=numerical_features,
             figsize=(
-                10,
+                15,
                 10
             ),
             tight_layout=True

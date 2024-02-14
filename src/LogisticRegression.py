@@ -42,7 +42,7 @@ class LogisticRegression:
         Softmax function normalizes data points into a probability distribution
 
         Args:
-            X (np.array): features input
+            x (np.array): features input
 
         Returns:
             np.array: probabilities of each class
@@ -78,8 +78,8 @@ class LogisticRegression:
         Three types of gradient descent: Batch, Stochastic, and Mini-batch, based on the batch_size parameter.
 
         Args:
-            X (np.ndarray): input features of shape (num_samples, num_features)
-            y (np.ndarray): labels corresponding to X encoded as integers
+            x (np.ndarray): input features of shape (num_samples, num_features)
+            y (np.ndarray): labels corresponding to x encoded as integers
 
         Returns:
             np.ndarray: Tuple containing the trained weights and bias
@@ -146,7 +146,7 @@ class LogisticRegression:
         This produces a vector of probabilities representing the likelihood of each class.
         The class with the highest probability is selected as the predicted class for each input sample.
         Args:
-            X (np.array): input features
+            x (np.array): input features
 
         Returns:
             np.array: predicted labels

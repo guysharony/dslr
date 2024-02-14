@@ -151,7 +151,7 @@ class LogisticRegression:
         Returns:
             np.array: predicted labels
         """
-        if (len(self.weights) == 0 or self.bias == 0).any():
+        if np.array(len(self.weights) == 0 or self.bias == 0).any():
             raise ValueError("Weights or bias not initialized. Model must be trained before making predictions.")
         y_pred = self.softmax(X)
         return np.argmax(y_pred, axis=1)

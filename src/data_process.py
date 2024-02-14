@@ -30,7 +30,7 @@ def encode_house(house: str) -> int:
     """
     return house_names.index(house)
 
-def convert_to_timestamp(x) -> int:
+def convert_to_timestamp(x) -> float:
     """
     Convert date objects to timestamps.
 

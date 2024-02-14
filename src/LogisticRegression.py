@@ -139,7 +139,7 @@ class LogisticRegression:
 
         return self.weights, self.bias
 
-    def predict(self, X):
+    def predict(self, x):
         """
         Makes predictions using the trained weights and bias
         Softmax function is applied to the linear combination of input features and weight and bias term.
@@ -153,5 +153,5 @@ class LogisticRegression:
         """
         if np.array(len(self.weights) == 0 or self.bias == 0).any():
             raise ValueError("Weights or bias not initialized. Model must be trained before making predictions.")
-        y_pred = self.softmax(X)
+        y_pred = self.softmax(x)
         return np.argmax(y_pred, axis=1)

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import time 
 
 from typing import Tuple
 
@@ -102,14 +103,12 @@ class LogisticRegression:
                 y_batch = y_encoded[random_index].reshape(1, -1)
             else: # Mini-batch gradient descent
                 np.random.seed(i)
+                
+                indices = np.arange(m)
+                np.random.shuffle(indices)
 
-                # Combining x and y
-                combined_data = list(zip(x, y_encoded))
-                np.random.shuffle(combined_data)
-                x_shuffled, y_shuffled = zip(*combined_data)
-
-                x_shuffled = np.array(x_shuffled)
-                y_shuffled = np.array(y_shuffled)
+                x_shuffled = x[indices]
+                y_shuffled = y_encoded[indices]
 
                 x_batch = x_shuffled[:self.batch_size]
                 y_batch = y_shuffled[:self.batch_size]
@@ -129,13 +128,14 @@ class LogisticRegression:
             cost = self.cross_entropy_loss(y_batch, y_prediction)
             costs.append(cost)
 
+        prev_cost = cost
+
+
         print(f'Cost : [{costs[0]}] -> [{costs[-1]}]')
 
         plt.plot(range(1, self.max_iterations + 1), costs)
         plt.xlabel('Iterations')
         plt.ylabel('Cost')
-        plt.title('Cost vs Iterations')
-        plt.show()
 
         return self.weights, self.bias
 

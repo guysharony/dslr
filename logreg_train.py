@@ -1,6 +1,7 @@
 import sys as sys
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from src.data_process import data_process
 from src.data_process import data_spliter
@@ -40,6 +41,8 @@ def main():
             'weights': weights,
             'bias': bias
         }, 'weights')
+        
+        plt.show()
 
     except Exception as error:
         print(f"error: {error}")

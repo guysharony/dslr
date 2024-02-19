@@ -42,6 +42,7 @@ def main():
             'bias': bias
         }, 'weights')
         
+        plt.title('Gradient Descent: costs vs iterations')
         plt.show()
 
     except Exception as error:

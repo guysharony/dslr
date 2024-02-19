@@ -30,7 +30,7 @@ def main():
         bias = parameters['bias']
 
         # Logistic regression
-        model = LogisticRegression(None, None, weights, bias)
+        model = LogisticRegression(None, None, weights, bias, multi_class='ovr')
         predictions = model.predict(x)
 
         # Decoding predictions

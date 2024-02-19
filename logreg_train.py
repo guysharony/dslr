@@ -23,7 +23,8 @@ def main():
         x_train, x_test, y_train, y_test = data_spliter(x, y, 0.8)
 
         # model
-        model = LogisticRegression()
+        model = LogisticRegression(batch_size=1, multi_class='ovr')
+        # model = LogisticRegression(multi_class='multinomial')
 
         # Training
         weights, bias = model.fit(x_train, y_train)
@@ -41,7 +42,7 @@ def main():
             'weights': weights,
             'bias': bias
         }, 'weights')
-        
+
         plt.title('Gradient Descent: costs vs iterations')
         plt.show()
 

@@ -1,12 +1,11 @@
 import sys
+import time
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import time 
-from src.data_process import data_process, data_spliter
-from src.file_management import save_parameters_to_file
+from src.data_process import data_process
+from src.data_process import data_spliter
 from src.LogisticRegression import LogisticRegression
-from sklearn.metrics import accuracy_score
 
 def main():
     """

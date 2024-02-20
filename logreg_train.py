@@ -23,13 +23,18 @@ def main():
         x_train, x_test, y_train, y_test = data_spliter(x, y, 0.8)
 
         # model
-        model = LogisticRegression()
+        model = LogisticRegression(multi_class='ovr')
+        # model = LogisticRegression(batch_size=5, multi_class='multinomial')
 
         # Training
         weights, bias = model.fit(x_train, y_train)
 
         # Prediction
         y_house_predictions = model.predict(x_test)
+
+        print(y_house_predictions)
+
+        exit()
 
         # Display accuracy
         y_house_accuracy = np.mean(y_house_predictions == y_test)
@@ -41,7 +46,7 @@ def main():
             'weights': weights,
             'bias': bias
         }, 'weights')
-        
+
         plt.title('Gradient Descent: costs vs iterations')
         plt.show()
 

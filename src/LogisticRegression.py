@@ -100,12 +100,10 @@ class LogisticRegression:
     
     def _fit_ovr(self, x:np.ndarray, y:np.ndarray):
         classes = np.unique(y)
-        weights_list = []
-        bias_list = []
-        m, n = x.shape
-        weights = np.zeros(n)
+        _, n = x.shape
+        weights = np.zeros(n).reshape(-1, 1)
         bias = 0
-        print(len(x))
+
         for class_label in classes:
             y_binary = (y == class_label).astype(int)
             weights, bias = self._gradient_descent(x, y_binary)
@@ -115,11 +113,13 @@ class LogisticRegression:
 
     def _gradient_descent(self, x, y):
         m, n = x.shape
-        weights = np.zeros(n)
+
+        weights = np.zeros((n, self.batch_size or m))
+
         bias = 0
 
         costs = []
-        for _ in range(self.max_iterations):
+        for i in range(self.max_iterations):
             if self.batch_size is None: # Batch gradient descent
                 x_batch = x
                 y_batch = y
@@ -129,7 +129,7 @@ class LogisticRegression:
                 y_batch = y[random_index].reshape(1, -1)
             else: # Mini-batch gradient descent
                 np.random.seed(i)
-                
+
                 indices = np.arange(m)
                 np.random.shuffle(indices)
 
@@ -139,16 +139,17 @@ class LogisticRegression:
                 x_batch = x_shuffled[:self.batch_size]
                 y_batch = y_shuffled[:self.batch_size]
 
-            z = np.dot(x, weights) + bias
+            z = np.dot(x_batch, weights) + bias
             y_pred = self.sigmoid(z)
 
-            dw = (1 / m) * np.dot(x.T, (y_pred - y))
-            db = (1 / m) * np.sum(y_pred - y)
+            dw = (1 / len(x_batch)) * np.dot(x_batch.T, (y_pred - y_batch))
+            db = (1 / len(x_batch)) * np.sum(y_pred - y_batch)
 
             weights -= self.learning_rate * dw
             bias -= self.learning_rate * db
+
             # Saving cost
-            cost = self.cross_entropy_loss(y, y_pred)
+            cost = self.cross_entropy_loss(y_batch, y_pred)
             costs.append(cost)
 
         print(f'Cost : [{costs[0]}] -> [{costs[-1]}]')

@@ -206,6 +206,7 @@ class LogisticRegression:
 
             # Prediction
             y_predictions = self.activation(x_batch)
+
             # Computing derivative
             dw = (1 / len(x_batch)) * np.dot(x_batch.T, (y_predictions - y_batch))
             db = (1 / len(x_batch)) * np.sum(y_predictions - y_batch)
@@ -218,14 +219,8 @@ class LogisticRegression:
             cost = self.cross_entropy_loss(y_batch, y_predictions)
             costs.append(cost)
 
-        print(f'Cost : [{costs[0]}] -> [{costs[-1]}]')
+        self.plot_loss(costs)
 
-        plt.plot(range(1, self.max_iterations + 1), costs)
-        plt.xlabel('Iterations')
-        plt.ylabel('Cost')
-
-        # self.weights = weights
-        # self.bias = bias 
         return self.weights, self.bias
 
     def predict(self, x):

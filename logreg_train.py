@@ -23,16 +23,14 @@ def main():
         x_train, x_test, y_train, y_test = data_spliter(x, y, 0.8)
 
         # model
-        model = LogisticRegression(batch_size=None, multi_class='ovr')
+        # model = LogisticRegression(batch_size=None, multi_class='ovr')
         # model = LogisticRegression(batch_size=1, multi_class='ovr')
-        # model = LogisticRegression(batch_size=32, multi_class='ovr')
+        model = LogisticRegression(batch_size=32, multi_class='ovr')
         # model = LogisticRegression(multi_class='multinomial')
 
         # Training
         weights, bias = model.fit(x_train, y_train)
 
-        print(bias)
-        # exit()
         # Prediction
         y_house_predictions = model.predict(x_test)
 

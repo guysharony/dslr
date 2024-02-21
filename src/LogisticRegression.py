@@ -66,8 +66,6 @@ class LogisticRegression:
             x_prime = np.hstack((np.ones((x.shape[0], 1)), x))
             y_hypothesis = self.hypothesis(x_prime, self.thetas[class_type])
 
-            print(y_hypothesis)
-
             class_probabilities[:, class_type] = y_hypothesis
 
         return np.argmax(class_probabilities, axis=1)

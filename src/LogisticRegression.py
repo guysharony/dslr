@@ -67,21 +67,20 @@ class LogisticRegression:
         Returns:
             float: cross-entropy loss.
         """
-        m = y_true.shape[0]
-        # to avoid div by zero
+        m       = y_true.shape[0]
         epsilon = 1e-15
-        # to avoid log(0)
-        y_pred = np.clip(y_pred, epsilon, 1 - epsilon)
+        y_pred  += epsilon
+
         if self.multi_class == 'ovr':
-            return -(1/m) * np.sum(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
-        else:
-            return -(1/m) * np.sum(y_true * np.log(y_pred))
+            return -(1/m) * np.sum((y_true * np.log(y_pred)) + (1 - y_true) * np.log(1 - y_pred))
+        return -(1/m) * np.sum(y_true * np.log(y_pred))
 
     def fit(self, x:np.ndarray, y:np.ndarray):
         """
-        Train the multinomial logistic regression model using the input features (x) and corresponding labels (y).
-        It implements gradient descent optimization to minimize the cross-entropy loss function.
-        Multi-class Softmax activation function to compute class probabilities.
+        Train the logistic regression model using the input features (x) and corresponding labels (y).
+        Gradient descent optimization to minimize the cross-entropy loss function.
+        Sigmoid activation function for one-vs-all classification
+        Softmax activation function for multinomial classfication.
         Three types of gradient descent: Batch, Stochastic, and Mini-batch, based on the batch_size parameter.
 
         Args:
@@ -95,13 +94,24 @@ class LogisticRegression:
             return self._fit_ovr(x, y)
         elif self.multi_class == 'multinomial':
             return self._fit_multinomial(x, y)
-        else:
-            raise ValueError("Invalid method.")
+        raise ValueError("Invalid method.")
     
     def _fit_ovr(self, x:np.ndarray, y:np.ndarray):
+        """
+        Fit the logistic regression model using the one-vs-rest method.
+
+        For each class label in the dataset, this method trains a separate logistic regression
+        model to distinguish that class from all other classes.
+
+        Args:
+            x (np.ndarray): Input features of shape (num_samples, num_features).
+            y (np.ndarray): Labels corresponding to x.
+
+        Returns:
+            Tuple containing lists of weights and biases for each class.
+        """
         classes = np.unique(y)
-        _, n = x.shape
-        weights = np.zeros(n).reshape(-1, 1)
+        weights = np.zeros(x.shape[1])
         bias = 0
 
         for class_label in classes:
@@ -109,13 +119,12 @@ class LogisticRegression:
             weights, bias = self._gradient_descent(x, y_binary)
             self.weights.append(weights)
             self.bias.append(bias)
+
         return self.weights, self.bias
 
     def _gradient_descent(self, x, y):
         m, n = x.shape
-
         weights = np.zeros(n)
-
         bias = 0
 
         costs = []

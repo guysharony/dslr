@@ -114,7 +114,7 @@ class LogisticRegression:
     def _gradient_descent(self, x, y):
         m, n = x.shape
 
-        weights = np.zeros((n, self.batch_size or m))
+        weights = np.zeros(n)
 
         bias = 0
 
@@ -138,11 +138,12 @@ class LogisticRegression:
 
                 x_batch = x_shuffled[:self.batch_size]
                 y_batch = y_shuffled[:self.batch_size]
-
+            
             z = np.dot(x_batch, weights) + bias
             y_pred = self.sigmoid(z)
 
-            dw = (1 / len(x_batch)) * np.dot(x_batch.T, (y_pred - y_batch))
+            # dw = (1 / len(x_batch)) * np.dot(x_batch.T, (y_pred - y_batch))
+            dw = (1 / len(x_batch)) * np.dot(x_batch.T, (y_pred - y_batch.reshape(-1)))
             db = (1 / len(x_batch)) * np.sum(y_pred - y_batch)
 
             weights -= self.learning_rate * dw

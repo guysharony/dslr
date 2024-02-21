@@ -23,7 +23,9 @@ def main():
     x_train, x_test, y_train, y_test = data_spliter(x, y, 0.8)
 
     # model
-    model = LogisticRegression(multi_class='ovr')
+    model = LogisticRegression(
+        multi_class='ovr'
+    )
     # model = LogisticRegression(batch_size=5, multi_class='multinomial')
 
     # Training
@@ -33,8 +35,9 @@ def main():
     y_house_predictions = model.predict(x_test)
 
     # Display accuracy
-    y_house_accuracy = np.mean(y_house_predictions == y_test)
+    y_house_accuracy = model.accuracy(y_house_predictions, y_test)
     print(f"Predictions: {y_house_predictions.flatten()}")
+    print(f"Expected: {y_test.flatten()}")
     print(f"Accuracy: {y_house_accuracy * 100:.2f}%")
 
     # Saving thetas

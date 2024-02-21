@@ -6,7 +6,7 @@ from typing import Tuple
 
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.1, max_iterations=1500, thetas=[], batch_size=None, multi_class='ovr'):
+    def __init__(self, learning_rate=0.5, max_iterations=1500, thetas=[], batch_size=None, multi_class='ovr'):
         """
         Initialize the multinomial logistic regression model.
 
@@ -27,10 +27,10 @@ class LogisticRegression:
         return 1 / (1 + np.exp(-z))
 
     def one_hot_encoding(self, y):
-        one_hot_encode = np.zeros((len(np.unique(y)), y.shape[0]))
-        for i in range(len(np.unique(y))):
-            one_hot_encode[y[i], i] = 1
-        return one_hot_encode
+        one_hot_y = np.zeros((len(y), len(np.unique(y))))
+        for i in range(len(y)):
+            one_hot_y[i, y[i]] = 1
+        return one_hot_y
 
     def create_batch(self, x, y, i):
         m, _ = x.shape
@@ -59,6 +59,19 @@ class LogisticRegression:
     def hypothesis(self, x, thetas):
         return self.sigmoid(np.dot(x, thetas.T))
 
+    def predict(self, x):
+        class_probabilities = np.zeros((x.shape[0], 4))
+
+        for class_type in range(4):
+            x_prime = np.hstack((np.ones((x.shape[0], 1)), x))
+            y_hypothesis = self.hypothesis(x_prime, self.thetas[class_type])
+
+            print(y_hypothesis)
+
+            class_probabilities[:, class_type] = y_hypothesis
+
+        return np.argmax(class_probabilities, axis=1)
+
     def cross_entropy_loss(self, x, y, thetas) -> np.array:
         m, _ = x.shape
 
@@ -66,7 +79,7 @@ class LogisticRegression:
         return - (1 / m) * np.sum((y * np.log(y_hypothesis)) + (1 - y) * np.log(1 - y_hypothesis))
 
     def gradient(self, x, y, y_hypothesis):
-        return (1 / len(x)) * np.dot((y_hypothesis - y), x)
+        return x.T.dot(y_hypothesis - y) / len(x)
 
     def fit(self, x, y):
         class_types = np.unique(y)
@@ -74,12 +87,12 @@ class LogisticRegression:
         x_prime = np.hstack((np.ones((x.shape[0], 1)), x))
         y_hot_encoded = self.one_hot_encoding(y)
 
-        self.thetas = np.zeros((class_types.shape[0], x_prime.shape[1]))
+        self.thetas = rand(class_types.shape[0], x_prime.shape[1])
 
         costs = []
         for i in range(self.max_iterations):
             for class_type in class_types:
-                x_batch, y_batch = self.create_batch(x_prime, y_hot_encoded[class_type], i)
+                x_batch, y_batch = self.create_batch(x_prime, y_hot_encoded[:, class_type], i)
 
                 y_hypothesis = self.hypothesis(x_batch, self.thetas[class_type])
 
@@ -87,7 +100,7 @@ class LogisticRegression:
 
                 self.thetas[class_type] -= self.learning_rate * gradient
 
-            cost = self.cross_entropy_loss(x_prime, y_hot_encoded.T, self.thetas)
+            cost = self.cross_entropy_loss(x_prime, y_hot_encoded, self.thetas)
             costs.append(cost)
 
         self.plot_loss(costs)
@@ -101,3 +114,6 @@ class LogisticRegression:
         plt.ylabel('Cost')
         plt.title('Gradient Descent: costs vs iterations')
         plt.show()
+
+    def accuracy(self, y_prediction, y_true):
+        return np.mean(y_prediction == y_true)

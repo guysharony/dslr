@@ -1,11 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time 
-
 from typing import Tuple
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.5, max_iterations=1500, weights=[], bias=[], batch_size=None, multi_class='ovr'):
+    def __init__(self, learning_rate=0.3, max_iterations=1500, weights=[], bias=[], batch_size=None, multi_class='ovr'):
         """
         Initialize the multinomial logistic regression model.
 
@@ -29,6 +28,7 @@ class LogisticRegression:
         self.bias = bias
         self.multi_class = multi_class
         self.batch_size = batch_size
+
 
     def one_hot_encode(self, y) -> np.array:
         """
@@ -103,9 +103,9 @@ class LogisticRegression:
         Returns:
             float: cross-entropy loss.
         """
-        m       = y_true.shape[0]
+        m = y_true.shape[0]
         epsilon = 1e-15
-        y_predictions  += epsilon
+        y_predictions += epsilon
 
         if self.multi_class == 'ovr':
             return -(1/m) * np.sum((y_true * np.log(y_predictions)) + (1 - y_true) * np.log(1 - y_predictions))
@@ -162,6 +162,8 @@ class LogisticRegression:
             weights, bias = self.gradient_descent(x, y_binary)
             self.weights.append(weights)
             self.bias.append(bias)
+
+            self.class_label = class_label
 
         return self.weights, self.bias
 

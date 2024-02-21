@@ -2,6 +2,7 @@ import sys as sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
 
 from src.data_process import data_process
 from src.data_process import data_spliter
@@ -23,10 +24,7 @@ def main():
         x_train, x_test, y_train, y_test = data_spliter(x, y, 0.8)
 
         # model
-        # model = LogisticRegression(batch_size=None, multi_class='ovr')
-        # model = LogisticRegression(batch_size=1, multi_class='ovr')
-        model = LogisticRegression(batch_size=32, multi_class='ovr')
-        # model = LogisticRegression(multi_class='multinomial')
+        model = LogisticRegression()
 
         # Training
         weights, bias = model.fit(x_train, y_train)
@@ -38,6 +36,8 @@ def main():
         y_house_accuracy = np.mean(y_house_predictions == y_test)
         print(f"Predictions: {y_house_predictions.flatten()}")
         print(f"Accuracy: {y_house_accuracy * 100:.2f}%")
+
+        print(f"Accuracy score from Scikit-Learn library: {accuracy_score(y_test, y_house_predictions)}")
 
         # Saving thetas
         save_parameters_to_file({

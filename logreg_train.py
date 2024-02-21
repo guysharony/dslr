@@ -15,43 +15,37 @@ def main():
      splits it into training and test sets, trains a logistic regression model on the training data,
      evaluates its accuracy on the test data, and saves the trained model parameters to a file.
     """
-    try:
-        assert len(sys.argv) == 2, "1 argument required"
+    # try:
+    assert len(sys.argv) == 2, "1 argument required"
 
-        dataset = pd.read_csv(sys.argv[1])
-        x, y = data_process(dataset, 'train model')
-        x_train, x_test, y_train, y_test = data_spliter(x, y, 0.8)
+    dataset = pd.read_csv(sys.argv[1])
+    x, y = data_process(dataset, 'train model')
+    x_train, x_test, y_train, y_test = data_spliter(x, y, 0.8)
 
-        # model
-        model = LogisticRegression(multi_class='ovr')
-        # model = LogisticRegression(batch_size=5, multi_class='multinomial')
+    # model
+    model = LogisticRegression(multi_class='ovr')
+    # model = LogisticRegression(batch_size=5, multi_class='multinomial')
 
-        # Training
-        weights, bias = model.fit(x_train, y_train)
+    # Training
+    thetas = model.fit(x_train, y_train)
 
-        # Prediction
-        y_house_predictions = model.predict(x_test)
+    # Prediction
+    y_house_predictions = model.predict(x_test)
 
-        print(y_house_predictions)
+    # Display accuracy
+    y_house_accuracy = np.mean(y_house_predictions == y_test)
+    print(f"Predictions: {y_house_predictions.flatten()}")
+    print(f"Accuracy: {y_house_accuracy * 100:.2f}%")
 
-        exit()
+    # Saving thetas
+    save_parameters_to_file({
+        'thetas': thetas,
+    }, 'thetas')
 
-        # Display accuracy
-        y_house_accuracy = np.mean(y_house_predictions == y_test)
-        print(f"Predictions: {y_house_predictions.flatten()}")
-        print(f"Accuracy: {y_house_accuracy * 100:.2f}%")
-
-        # Saving thetas
-        save_parameters_to_file({
-            'weights': weights,
-            'bias': bias
-        }, 'weights')
-
-        plt.title('Gradient Descent: costs vs iterations')
-        plt.show()
-
-    except Exception as error:
-        print(f"error: {error}")
+    plt.title('Gradient Descent: costs vs iterations')
+    plt.show()
+    # except Exception as error:
+    #    print(f"error: {error}")
 
 if __name__ == "__main__":
     main()

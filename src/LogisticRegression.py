@@ -1,11 +1,12 @@
 import numpy as np
+from numpy.random import rand
 import matplotlib.pyplot as plt
 
 from typing import Tuple
 
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.1, max_iterations=10, thetas=[], batch_size=None, multi_class='ovr'):
+    def __init__(self, learning_rate=0.1, max_iterations=1500, thetas=[], batch_size=None, multi_class='ovr'):
         """
         Initialize the multinomial logistic regression model.
 
@@ -25,63 +26,78 @@ class LogisticRegression:
     def sigmoid(self, z):
         return 1 / (1 + np.exp(-z))
 
-    def gradient_descent(self, x, y):
-        m, n = x.shape
+    def one_hot_encoding(self, y):
+        one_hot_encode = np.zeros((len(np.unique(y)), y.shape[0]))
+        for i in range(len(np.unique(y))):
+            one_hot_encode[y[i], i] = 1
+        return one_hot_encode
 
-        for i in range(self.max_iterations):
-            if self.batch_size is None: # Batch gradient descent
-                x_batch = x
-                y_batch = y
-            elif self.batch_size == 1: # Stochastic gradient descent
-                random_index = np.random.randint(0, m)
-                x_batch = x[random_index].reshape(1, -1)
-                y_batch = y[random_index].reshape(1, -1)
-            else: # Mini-batch gradient descent
-                np.random.seed(i)
+    def create_batch(self, x, y, i):
+        m, _ = x.shape
 
-                indices = np.arange(m)
-                np.random.shuffle(indices)
+        if self.batch_size is None: # Batch gradient descent
+            x_batch = x
+            y_batch = y
+        elif self.batch_size == 1: # Stochastic gradient descent
+            random_index = np.random.randint(0, m)
+            x_batch = x[random_index]
+            y_batch = y[random_index]
+        else: # Mini-batch gradient descent
+            np.random.seed(i)
 
-                x_shuffled = x[indices]
-                y_shuffled = y[indices]
+            indices = np.arange(m)
+            np.random.shuffle(indices)
 
-                x_batch = x_shuffled[:self.batch_size]
-                y_batch = y_shuffled[:self.batch_size]
+            x_shuffled = x[indices]
+            y_shuffled = y[indices]
 
-            
+            x_batch = x_shuffled[:self.batch_size]
+            y_batch = y_shuffled[:self.batch_size]
+
+        return x_batch, y_batch
+
+    def hypothesis(self, x, thetas):
+        return self.sigmoid(np.dot(x, thetas.T))
+
+    def cross_entropy_loss(self, x, y, thetas) -> np.array:
+        m, _ = x.shape
+
+        y_hypothesis = self.hypothesis(x, thetas)
+        return - (1 / m) * np.sum((y * np.log(y_hypothesis)) + (1 - y) * np.log(1 - y_hypothesis))
+
+    def gradient(self, x, y, y_hypothesis):
+        return (1 / len(x)) * np.dot((y_hypothesis - y), x)
 
     def fit(self, x, y):
         class_types = np.unique(y)
-        m, n = x.shape
 
-        x_prime = np.hstack((np.ones((m, 1)), x))
-        self.thetas = np.zeros((x_prime.shape[1], 1))
+        x_prime = np.hstack((np.ones((x.shape[0], 1)), x))
+        y_hot_encoded = self.one_hot_encoding(y)
 
-        print(self.thetas.shape)
+        self.thetas = np.zeros((class_types.shape[0], x_prime.shape[1]))
 
-        for class_type in class_types:
-            y_binary = (y == class_type).astype(int)
+        costs = []
+        for i in range(self.max_iterations):
+            for class_type in class_types:
+                x_batch, y_batch = self.create_batch(x_prime, y_hot_encoded[class_type], i)
 
-            for i in range(self.max_iterations):
-                if self.batch_size is None: # Batch gradient descent
-                    x_batch = x_prime
-                    y_batch = y_binary
-                elif self.batch_size == 1: # Stochastic gradient descent
-                    random_index = np.random.randint(0, m)
-                    x_batch = x_prime[random_index].reshape(1, -1)
-                    y_batch = y_binary[random_index].reshape(1, -1)
-                else: # Mini-batch gradient descent
-                    np.random.seed(i)
+                y_hypothesis = self.hypothesis(x_batch, self.thetas[class_type])
 
-                    indices = np.arange(m)
-                    np.random.shuffle(indices)
+                gradient = self.gradient(x_batch, y_batch, y_hypothesis)
 
-                    x_shuffled = x_prime[indices]
-                    y_shuffled = y_binary[indices]
+                self.thetas[class_type] -= self.learning_rate * gradient
 
-                    x_batch = x_shuffled[:self.batch_size]
-                    y_batch = y_shuffled[:self.batch_size]
+            cost = self.cross_entropy_loss(x_prime, y_hot_encoded.T, self.thetas)
+            costs.append(cost)
 
-                y_prediction = self.sigmoid(np.dot(x_batch, self.thetas))
+        self.plot_loss(costs)
+        return self.thetas
 
-                print(y_prediction)
+    def plot_loss(self, costs):
+        print(f'Cost : [{costs[0]}] -> [{costs[-1]}]')
+
+        plt.plot(range(1, self.max_iterations + 1), costs)
+        plt.xlabel('Iterations')
+        plt.ylabel('Cost')
+        plt.title('Gradient Descent: costs vs iterations')
+        plt.show()

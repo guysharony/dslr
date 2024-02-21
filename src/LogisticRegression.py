@@ -6,7 +6,7 @@ from typing import Tuple
 
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.1, max_iterations=1500, thetas=[], batch_size=None, multi_class='ovr'):
+    def __init__(self, learning_rate=0.1, max_iterations=1500, thetas=[], batch_size=None):
         """
         Initialize the multinomial logistic regression model.
 
@@ -21,7 +21,6 @@ class LogisticRegression:
         self.max_iterations = max_iterations
         self.thetas = thetas
         self.batch_size = batch_size
-        self.multi_class = multi_class
 
     def sigmoid(self, z):
         return 1 / (1 + np.exp(-z))

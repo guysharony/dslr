@@ -6,7 +6,7 @@ from typing import Tuple
 
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.5, max_iterations=1500, thetas=[], batch_size=None, multi_class='ovr'):
+    def __init__(self, learning_rate=0.1, max_iterations=1500, thetas=[], batch_size=None, multi_class='ovr'):
         """
         Initialize the multinomial logistic regression model.
 
@@ -87,9 +87,10 @@ class LogisticRegression:
 
         self.thetas = rand(class_types.shape[0], x_prime.shape[1])
 
-        costs = []
-        for i in range(self.max_iterations):
-            for class_type in class_types:
+        for class_type in class_types:
+
+            costs = []
+            for i in range(self.max_iterations):
                 x_batch, y_batch = self.create_batch(x_prime, y_hot_encoded[:, class_type], i)
 
                 y_hypothesis = self.hypothesis(x_batch, self.thetas[class_type])
@@ -98,10 +99,14 @@ class LogisticRegression:
 
                 self.thetas[class_type] -= self.learning_rate * gradient
 
-            cost = self.cross_entropy_loss(x_prime, y_hot_encoded, self.thetas)
-            costs.append(cost)
+                cost = self.cross_entropy_loss(x_prime, y_hot_encoded[:, class_type], self.thetas[class_type])
+                costs.append(cost)
 
-        self.plot_loss(costs)
+            self.plot_loss(costs)
+
+        plt.title('Gradient Descent: costs vs iterations')
+        plt.show()
+
         return self.thetas
 
     def plot_loss(self, costs):
@@ -110,8 +115,6 @@ class LogisticRegression:
         plt.plot(range(1, self.max_iterations + 1), costs)
         plt.xlabel('Iterations')
         plt.ylabel('Cost')
-        plt.title('Gradient Descent: costs vs iterations')
-        plt.show()
 
     def accuracy(self, y_prediction, y_true):
         return np.mean(y_prediction == y_true)

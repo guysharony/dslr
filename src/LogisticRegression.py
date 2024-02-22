@@ -6,7 +6,7 @@ from typing import Tuple
 
 
 class LogisticRegression:
-    def __init__(self, learning_rate=0.1, max_iterations=1500, thetas=[], batch_size=None):
+    def __init__(self, learning_rate=0.5, max_iterations=1500, thetas=[], batch_size=None):
         """
         Initialize the multinomial logistic regression model.
 
@@ -102,9 +102,6 @@ class LogisticRegression:
                 costs.append(cost)
 
             self.plot_loss(costs)
-
-        plt.title('Gradient Descent: costs vs iterations')
-        plt.show()
 
         return self.thetas
 

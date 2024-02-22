@@ -41,6 +41,9 @@ def main():
         save_parameters_to_file({
             'thetas': thetas,
         }, 'thetas')
+
+        plt.title('Gradient Descent: costs vs iterations')
+        plt.show()
     except Exception as error:
         print(f"error: {error}")
 

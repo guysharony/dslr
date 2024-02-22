@@ -23,15 +23,43 @@ class LogisticRegression:
         self.batch_size = batch_size
 
     def sigmoid(self, z):
+        """ Maps data points to the range [0, 1] representing the probability
+        of belonging to a certain class in binary classification tasks.
+
+        Args:
+            z (np.ndarray): linear combination of input features.
+                        weighted sum of the inputs adjusted by the bias 
+
+        Returns:
+            np.ndarray: results of sigmoid function 
+        """
         return 1 / (1 + np.exp(-z))
 
     def one_hot_encoding(self, y):
+        """ Encodes labels into binary vectors 
+
+        Args:
+            y (np.ndarray): labels
+
+        Returns:
+            np.ndarray: binary encoded labels
+        """
         one_hot_y = np.zeros((len(y), len(np.unique(y))))
         for i in range(len(y)):
             one_hot_y[i, y[i]] = 1
         return one_hot_y
 
     def create_batch(self, x, y, i):
+        """ Create batches for gradient descent to train on
+
+        Args:
+            x (np.ndarray): input features
+            y (np.ndarray): target labels
+            i (int): current iteration index
+
+        Returns:
+            tuple: batched x and y 
+        """
         m, _ = x.shape
 
         if self.batch_size is None: # Batch gradient descent
@@ -56,9 +84,26 @@ class LogisticRegression:
         return x_batch, y_batch
 
     def hypothesis(self, x, thetas):
+        """ Compute the activation function
+
+        Args:
+            x (np.ndarray): input features
+            thetas (np.ndarray): model parameters (weights and bias)
+
+        Returns:
+            np.ndarray: predicted probabilities
+        """
         return self.sigmoid(np.dot(x, thetas.T))
 
     def predict(self, x):
+        """ Makes predictions using the trained model
+
+        Args:
+            x (np.ndarray): input features
+
+        Returns:
+            np.ndarray: predicted labels
+        """
         class_probabilities = np.zeros((x.shape[0], 4))
 
         for class_type in range(4):
@@ -70,15 +115,45 @@ class LogisticRegression:
         return np.argmax(class_probabilities, axis=1)
 
     def cross_entropy_loss(self, x, y, thetas) -> np.array:
+        """ Computes the cross-entropy loss: measures the difference
+        between the true binary labels and predicted probabilitites
+
+        Args:
+            x (np.ndarray): input features
+            y (np.ndarray): target labels
+            thetas (np.ndarray): predicted probabilities
+
+        Returns:
+            np.array: cross entropy loss
+        """
         m, _ = x.shape
 
         y_hypothesis = self.hypothesis(x, thetas)
         return - (1 / m) * np.sum((y * np.log(y_hypothesis)) + (1 - y) * np.log(1 - y_hypothesis))
 
     def gradient(self, x, y, y_hypothesis):
+        """ Computes the gradient of the loss function
+
+        Args:
+            x (np.ndarray): input features
+            y (np.ndarray): target labels
+            y_hypothesis (np.ndarray): predicted probabilities 
+
+        Returns:
+            np.ndarray: gradient of the loss functions
+        """
         return x.T.dot(y_hypothesis - y) / len(x)
 
     def fit(self, x, y):
+        """ Fits the one-vs-all logistic regression model to the training data
+
+        Args:
+            x (np.ndarray): input features
+            y (np.ndarray): target labels
+
+        Returns:
+            np.ndarray: model parameters (weights and bias)
+        """
         class_types = np.unique(y)
 
         x_prime = np.hstack((np.ones((x.shape[0], 1)), x))
@@ -106,6 +181,12 @@ class LogisticRegression:
         return self.thetas
 
     def plot_loss(self, costs):
+        """ Plots the loss function with number of iterations on x-axis and
+        loss values on y-axis
+
+        Args:
+            costs (list): List of costs over training iterations.
+        """
         print(f'Cost : [{costs[0]}] -> [{costs[-1]}]')
 
         plt.plot(range(1, self.max_iterations + 1), costs)
@@ -113,4 +194,13 @@ class LogisticRegression:
         plt.ylabel('Cost')
 
     def accuracy(self, y_prediction, y_true):
+        """ Compute the accuracy of the model
+
+        Args:
+            y_prediction (numpy.ndarray): predicted labels
+            y_true (numpy.ndarray): true labels
+
+        Returns:
+            float: accuracy score
+        """
         return np.mean(y_prediction == y_true)

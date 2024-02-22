@@ -2,6 +2,7 @@ import sys as sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
 
 from src.data_process import data_process
 from src.data_process import data_spliter
@@ -36,7 +37,7 @@ def main():
         print(f"Predictions: {y_house_predictions.flatten()}")
         print(f"Expected: {y_test.flatten()}")
         print(f"Accuracy: {y_house_accuracy * 100:.2f}%")
-
+        print(f"Accuracy score from Scikit-Learn library: {accuracy_score(y_test, y_house_predictions)}")
         # Saving thetas
         save_parameters_to_file({
             'thetas': thetas,

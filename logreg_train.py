@@ -26,25 +26,24 @@ def main():
         model = LogisticRegression()
 
         # Training
-        weights, bias = model.fit(x_train, y_train)
+        thetas = model.fit(x_train, y_train)
 
         # Prediction
         y_house_predictions = model.predict(x_test)
 
         # Display accuracy
-        y_house_accuracy = np.mean(y_house_predictions == y_test)
+        y_house_accuracy = model.accuracy(y_house_predictions, y_test)
         print(f"Predictions: {y_house_predictions.flatten()}")
+        print(f"Expected: {y_test.flatten()}")
         print(f"Accuracy: {y_house_accuracy * 100:.2f}%")
 
         # Saving thetas
         save_parameters_to_file({
-            'weights': weights,
-            'bias': bias
-        }, 'weights')
-        
+            'thetas': thetas,
+        }, 'thetas')
+
         plt.title('Gradient Descent: costs vs iterations')
         plt.show()
-
     except Exception as error:
         print(f"error: {error}")
 

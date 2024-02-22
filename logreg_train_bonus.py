@@ -1,12 +1,11 @@
 import sys
+import time
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import time 
-from src.data_process import data_process, data_spliter
-from src.file_management import save_parameters_to_file
+from src.data_process import data_process
+from src.data_process import data_spliter
 from src.LogisticRegression import LogisticRegression
-from sklearn.metrics import accuracy_score
 
 def main():
     """
@@ -28,18 +27,20 @@ def main():
 
         batch_size = [None, 1, 32]
         plt.figure(figsize=(15, 5))
-        i = 0
-        for algorithm in gradient_descent:
+
+        for i, algorithm in enumerate(gradient_descent):
+            print(f"{algorithm} gradient descent:")
+
             # model
             model = LogisticRegression(batch_size=batch_size[i])
 
-            plt.subplot(1, 3, i+1)
+            plt.subplot(1, 3, i + 1)
             plt.title(f"{algorithm} gradient descent")
 
             start_time = time.time()
 
             # Training
-            weights, bias = model.fit(x_train, y_train)
+            model.fit(x_train, y_train)
 
             end_time = time.time()
             execution_time = end_time - start_time
@@ -48,14 +49,15 @@ def main():
             y_house_predictions = model.predict(x_test)
 
             # Compute accuracy
-            accuracy = np.mean(y_house_predictions == y_test)
+            accuracy = model.accuracy(y_house_predictions, y_test)
             accuracy_results.append(accuracy)
             time_results.append(execution_time)
 
             print(f"Optimization algorithm: {algorithm}")
             print(f"Accuracy: {accuracy * 100:.2f}%")
             print(f"Execution time: {execution_time:.2f} seconds")
-            i += 1
+            if i < len(gradient_descent) - 1:
+                print()
 
         plt.tight_layout()
         plt.show()

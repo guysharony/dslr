@@ -26,11 +26,10 @@ def main():
 
         # Load parameters
         parameters = load_parameters_from_file(sys.argv[2])
-        weights = parameters['weights']
-        bias = parameters['bias']
+        thetas = parameters['thetas']
 
         # Logistic regression
-        model = LogisticRegression(None, None, weights, bias)
+        model = LogisticRegression(None, None, thetas)
         predictions = model.predict(x)
 
         # Decoding predictions

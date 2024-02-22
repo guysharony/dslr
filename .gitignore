@@ -2,7 +2,9 @@ __pycache__
 **/__pycache__/
 
 weights
+thetas
 **/weights
+**/thetas
 
 houses.csv
 **/houses.csv

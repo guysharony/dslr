@@ -193,34 +193,6 @@ class Compute:
         return variance ** 0.5
 
     @staticmethod
-    def median(values) -> Union[float, None]:
-        """
-        Calculate the median of a list of values.
-        The median is a measure of central tendency in a dataset,
-        representing the middle value when the data points are arranged in ascending or descending order.
-
-        Args:
-            values (list): list of values
-
-        Returns:
-            Union[float, None]: the median of the list of values
-        """
-        numeric_values = Compute.numeric(values)
-
-        if not numeric_values:
-            return None
-
-        sorted_values = sorted(numeric_values)
-        n = len(sorted_values)
-        middle_index = n // 2
-
-        if n % 2 == 0:
-            return (sorted_values[middle_index - 1] + sorted_values[middle_index]) / 2
-        else:
-            return sorted_values[middle_index]
-
-
-    @staticmethod
     def skewness(values) -> Union[float, None]:
         """
         Calculate the skewness of a list of values.
